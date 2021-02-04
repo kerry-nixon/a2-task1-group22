@@ -1,6 +1,6 @@
 ---
 title: "Adult Salmon Passage"
-author: "Kerry Nixon"
+author: "Kerry Nixon, Kelsie Fronheiser, Shelby Walsh"
 date: "2/1/2021"
 output: 
   html_document:
@@ -8,11 +8,45 @@ output:
     code_folding: hide
     toc: true
     toc_float: true
-    number_sections: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE, message = FALSE)
+
+library(tidyverse)
+library(janitor)
+library(here)
+library(tidyr)
+library(lubridate)
+library(tsibble)
+library(feasts)
+```
+# Overview {.tabset}
+![Willamette Falls Fish Ladder: Photo Credit Oregon Department of Fish & Wildlife](/ESM 244/esm244_assign2/a2-task1-group22/images/willamette_falls.jpg)
+
+This data set used in this report was accessed from [Columbia River DART](http://www.cbr.washington.edu/dart) and includes counts of adult fish passages through the Willamette Falls fish ladder between January 1, 2001 and December 31, 2010. This report focuses on adult and jack Coho salmon (*Oncorhynchus kisutch*) and Steelhead Trout (*Oncorhynchus mykiss*). The results of the report display time series and season plots of Coho and Steelhead fish passages through Willamette Falls, as well as annual totals per species.
+```{r}
+full_fish <- read_csv(here("data", "willamette_fish_passage.csv"))
+```
+## Time Series
+```{r}
+# Data wrangling
+fish <- full_fish %>% 
+  select("Project", "Date", "Steelhead","Coho","Jack Coho")
+
+fish_ts <- fish %>% 
+  mutate(Date = lubridate::mdy(Date)) %>% 
+  as_tsibble(key = NULL, index = Date)
+
+# Exploratory graph
+ggplot(data = fish_ts, aes(x = Date, y = Steelhead)) +
+  geom_point()
 ```
 
+<<<<<<< HEAD
 
+=======
+## Seasonplots
+
+## Summary Statistics & Analysis
+>>>>>>> origin
