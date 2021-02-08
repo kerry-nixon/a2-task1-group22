@@ -68,7 +68,7 @@ ggplot(data = fish_ts, aes(x = date, y = count)) +
 
 
 ## Seasonplots
-```{r}
+```{r, fig.cap= "**Figure .** Seasonal distribution of salmon observations at the Willamette Fish Ladders from 2001 to 2010."}
 #trying to out a ggseason just to explore
 fish_ts_season <- fish_ts
 
@@ -85,12 +85,12 @@ steel_plot <-
   gg_season(data = steel, y = count, pal = coul_steel, show.legend = FALSE) +
   theme_gray() +
   labs(x = "Month",
-       y = "Fish Observations", 
+       y = "", 
        title = "Steelhead") +
-  theme(plot.title = element_text(size = 10,
+  theme(plot.title = element_text(size = 14,
                                    face = "bold",
-        hjust = 0.5))
-
+        hjust = 0.5),
+        axis.title.x = element_text(size = 14))
 
 
 #coho only
@@ -101,10 +101,10 @@ coho <- fish_ts_season %>%
 coho_plot <- 
   gg_season(data = coho, y = count, pal = pal_seegruen, show.legend = FALSE) +
   theme_gray() +
-  labs(x = "Month",
-       y = "Fish Observations", 
+  labs(x = "",
+       y = "", 
        title = "Coho") +
-  theme(plot.title = element_text(size = 10,
+  theme(plot.title = element_text(size = 14,
                                    face = "bold",
         hjust = 0.5))
 
@@ -122,23 +122,25 @@ coul_jack <- colorRampPalette(coul_jack)(10)
 jack_coho_plot <- 
   gg_season(data = jack_coho, y = count, pal = coul_jack, show.legend = FALSE) +
   theme_gray() +
-  labs(x = "Month",
+  labs(x = "",
        y = "Fish Observations", 
        title = "Jack Coho") +
-  theme(plot.title = element_text(size = 10,
+  theme(plot.title = element_text(size = 14,
                                    face = "bold",
-        hjust = 0.5)) 
+        hjust = 0.5),
+        axis.title.y = element_text(size = 14)) 
 
 
 #put all 3 season plots together in 1 graph
 season <- coho_plot/jack_coho_plot/steel_plot
 
+
 season
 ```
 
-- Steelhead salmon were 
-- coho = september through november observed. Increasing over years
-- Jack coho = late september though october, most centralized but least observed
+- Coho and Jack Coho peak seasonally in early October, with Jack Coho having the most centralized observations
+- Coho salmon observations have increased since 2001 and have the highest number of observations in a particular month
+- Steelhead salmon have the longest period of observation, ranging from January to August, peaking in June
 
 
 
