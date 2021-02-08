@@ -23,6 +23,8 @@ library(feasts)
 library(colorspace)
 library(RColorBrewer)
 library(plotly)
+library(patchwork)
+library(unikn)
 
 palette_grp <- c("#50A3A4", "#FCAF38", "#F95335")
 ```
@@ -66,52 +68,79 @@ ggplot(data = fish_ts, aes(x = date, y = count)) +
 
 
 ## Seasonplots
-```{r}
+```{r, fig.cap= "**Figure .** Seasonal distribution of salmon observations at the Willamette Fish Ladders from 2001 to 2010."}
 #trying to out a ggseason just to explore
 fish_ts_season <- fish_ts
-  
-fish_ts_season %>% 
-  gg_season(y = count) +
-  facet_wrap(~ species) +
-  theme_minimal() +
-  labs(x = "Month",
-       y = "Number of Fish Observed ", 
-       title = "Seasonal Salmon Observations at the Willamette Falls\n Fish Ladder")
 
+#steelhead only
 steel <- fish_ts_season %>% 
   filter(species == "steelhead")
 
+#color palette for steelhead
+coul_steel <- brewer.pal(5, "Reds")
+coul_steel <- colorRampPalette(coul_steel)(10)
+
+#ggseason for steelhead
 steel_plot <- 
-  gg_season(data = steel, y = count, pal = heat_hcl(9, l=c(80, 30), c=c(30,90), power = c(1/5, 1.5))) +
-  theme_minimal()
+  gg_season(data = steel, y = count, pal = coul_steel, show.legend = FALSE) +
+  theme_gray() +
+  labs(x = "Month",
+       y = "", 
+       title = "Steelhead") +
+  theme(plot.title = element_text(size = 14,
+                                   face = "bold",
+        hjust = 0.5),
+        axis.title.x = element_text(size = 14))
 
-steel_plot
 
-
+#coho only
 coho <- fish_ts_season %>% 
   filter(species == "coho") 
 
-
+#coho season plot
 coho_plot <- 
-  gg_season(data = coho, y = count, pal = heat_hcl(9, h =c(0,-70), l=c(75, 40), c=c(40,80), power = 1)) +
-  theme_minimal()
+  gg_season(data = coho, y = count, pal = pal_seegruen, show.legend = FALSE) +
+  theme_gray() +
+  labs(x = "",
+       y = "", 
+       title = "Coho") +
+  theme(plot.title = element_text(size = 14,
+                                   face = "bold",
+        hjust = 0.5))
 
-coho_plot
 
+
+#jack coho only
 jack_coho <- fish_ts_season %>% 
   filter(species == "jack_coho") 
 
+#jack coho color palette
+coul_jack <- brewer.pal(4, "Oranges")
+coul_jack <- colorRampPalette(coul_jack)(10)
 
+#jack coho season plot
 jack_coho_plot <- 
-  gg_season(data = jack_coho, y = count, pal = heat_hcl(9, c=c(80, 30), l=c(30,90), power = c(1/5, 1.5))) +
-  theme_minimal()
+  gg_season(data = jack_coho, y = count, pal = coul_jack, show.legend = FALSE) +
+  theme_gray() +
+  labs(x = "",
+       y = "Fish Observations", 
+       title = "Jack Coho") +
+  theme(plot.title = element_text(size = 14,
+                                   face = "bold",
+        hjust = 0.5),
+        axis.title.y = element_text(size = 14)) 
 
-jack_coho_plot
+
+#put all 3 season plots together in 1 graph
+season <- coho_plot/jack_coho_plot/steel_plot
+
+
+season
 ```
 
-- Steelhead salmon were 
-- coho = september through november observed. Increasing over years
-- Jack coho = late september though october, most centralized but least observed
+- Coho and Jack Coho peak seasonally in early October, with Jack Coho having the most centralized observations
+- Coho salmon observations have increased since 2001 and have the highest number of observations in a particular month
+- Steelhead salmon have the longest period of observation, ranging from January to August, peaking in June
 
 
 
