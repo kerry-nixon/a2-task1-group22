@@ -91,9 +91,9 @@ timeplot <- ggplot(data = fish_ts1, aes(x = date, y = count, color = species)) +
 
 
 #### Analysis:
-- Adult Coho salmon passage through Willamette Falls displays an overall positive trend, from less than 250 in 2007 to over 1,500 in 2010
-- Fish passage through the fish ladder is annually cyclical and annual patterns differs between Steelhead and the Coho salmon
-- Steelhead passage through the fish ladder remains above zero for a longer time period each year than Coho and Jack Coho salmon
+- Fish passage through Willamette Falls fish ladder displays seasonality for all three species but seasonal peaks differ between Steelhead and the Coho salmon
+- Fish passage through the fish ladder displays cyclicality for Coho and Jack Coho Salmon over period of 2 to 4 years
+- Adult Coho salmon passage through the fish ladder displays an overall positive trend from 2007 to 2010
 
 ## Seasonplots
 ```{r, fig.height= 8, fig.width=9, fig.cap= "**Figure 3.** Seasonal distribution of Coho Salmon, Jack Coho Salmon, and Steelhead observations at the Willamette Fish Ladder from 2001 to 2010."}
