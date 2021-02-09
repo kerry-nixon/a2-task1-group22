@@ -96,7 +96,7 @@ timeplot <- ggplot(data = fish_ts1, aes(x = date, y = count, color = species)) +
 - Adult Coho salmon passage through the fish ladder displays an overall positive trend from 2007 to 2010
 
 ## Seasonplots
-```{r, fig.height= 8, fig.width=9, fig.cap= "**Figure 3.** Seasonal distribution of Coho Salmon, Jack Coho Salmon, and Steelhead observations at the Willamette Fish Ladder from 2001 to 2010."}
+```{r, fig.height= 8, fig.width=9, fig.cap= "**Figure 3.** Seasonal distribution of Coho Salmon, Jack Coho Salmon, and Steelhead observations at the Willamette Fish Ladder from January 1, 2001 to December 31, 2010."}
 #trying to out a ggseason just to explore
 fish_ts_season <- fish_ts
 
@@ -178,7 +178,7 @@ season
 ## Summary Statistics & Analysis
 
 
-```{r, fig.height= 8, fig.width=9, fig.cap = "**Figure 4.** Total annual passage count of adult Coho Salmon, Jack Coho Salmon, and Stealhead Trout observed at Willamette Falls from the beginning of 2001 through the end of 2010. The scales of the y-axes are different for each species to render the data easier to visualize. Hover over a column to see the number of adult fish of that species observed for that year." }
+```{r, fig.height= 8, fig.width=9, fig.cap = "**Figure 4.** Total annual passage count of adult Coho Salmon, Jack Coho Salmon, and Stealhead Trout observed at Willamette Falls from January 1, 2001 to December 31, 2010. The scales of the y-axes are different for each species to render the data easier to visualize. Hover over a column to see the number of adult fish of that species observed for that year." }
 fish_index <- fish_ts1 %>% 
   index_by(year = ~ year(.)) %>% 
   group_by(species) %>% 
