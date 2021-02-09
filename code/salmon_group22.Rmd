@@ -31,12 +31,12 @@ palette_grp <- c("#50A3A4", "#FCAF38", "#F95335")
 # Overview {.tabset}
 
 
-The data set used in this report was accessed from [Columbia River DART](http://www.cbr.washington.edu/dart) and includes counts of adult fish passages through the Willamette Falls fish ladder between January 1, 2001 and December 31, 2010. This report is concerned with three species in particular: Coho Salmon (*Species Needed*), Jack Coho salmon (*Oncorhynchus kisutch*) and Steelhead Trout (*Oncorhynchus mykiss*). The results of the report are displayed as time series, season plots, and total annual count of adult fish passages through Willamette Falls by species.
+The data set used in this report was accessed from [Columbia River DART](http://www.cbr.washington.edu/dart) and includes counts of adult fish passages through the Willamette Falls fish ladder between January 1, 2001 and December 31, 2010. This report is concerned with three species in particular: Coho Salmon (*Oncorhynchus kisutch*), Jack (young) Coho salmon (*Oncorhynchus kisutch*) and Steelhead Trout (*Oncorhynchus mykiss*). The results of the report are displayed as a time series plot, season plot, and total annual counts of adult fish passages through Willamette Falls by species.
 
-![](https://www.nwp.usace.army.mil/portals/24/images/Willamette_Falls_Locks_area_map.jpg?ver=2018-10-01-153840-817&timestamp=1538422736049)
+![Figure 1. Map and photo of Willamette Falls Fish Ladder in Orgeon City, Oregon. Every year thousands of fish, including threatened Lower Columbia River Coho Salmon and Steelhead, traverse up and down the fish ladder to travel to and from the sea to complete their life cycle. ](https://www.nwp.usace.army.mil/portals/24/images/Willamette_Falls_Locks_area_map.jpg?ver=2018-10-01-153840-817&timestamp=1538422736049)
 
 #### Citations
-Columnia Basin research (2021). DART Adult Passage 1-1-2001 to 12-31-2010[data file]. Retrieved from
+Columbia Basin Research (2021). Data Courtesy of U.S. Army Corps of Engineers, NWD and Chelan, Douglas, and Grant County PUDs, Yakima Klickitat Fisheries Project, Colville Tribes Fish & Wildlife (OBMEP), Oregon Department of Fish & Wildlife, Washington Department of Fish & Wildlife. DART Adult Passage 1-1-2001 to 12-31-2010[data file]. Retrieved from
 http://www.cbr.washington.edu/dart/query/adult_graph_text
 
 US Army Corps of Engineers. Portland District Website [image]. Retrieved from https://www.nwp.usace.army.mil/willamette/locks/
@@ -45,7 +45,8 @@ US Army Corps of Engineers. Portland District Website [image]. Retrieved from ht
 full_fish <- read_csv(here("data", "willamette_fish_passage.csv"))
 ```
 ## Time Series
-```{r}
+```{r,fig.height= 8, fig.width=9, fig.cap= "**Figure 2.** Coho Salmon, Jack Coho Salmon, and Steelhead annual passage trends from January 1, 2001 to December 31, 2010 through the Willamette Fish Ladder."}
+
 # Data wrangling
 fish <- full_fish %>% 
   select("Project", "Date", "Steelhead","Coho","Jack Coho") %>% 
@@ -60,15 +61,42 @@ fish_ts <- fish %>%
   mutate(date = lubridate::mdy(date)) %>% 
   as_tsibble(key = species, index = date)
 
-# Exploratory graph
-ggplot(data = fish_ts, aes(x = date, y = count)) +
-  geom_line() +
-  facet_wrap( ~ species, dir = "v")
+
+# Time series graph
+fish_ts1 <- fish %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
+  as_tsibble(key = species, index = date) %>% 
+  mutate(species = case_when(
+    species == "coho" ~ "Coho",
+    species == "jack_coho" ~ "Jack Coho",
+    species == "steelhead" ~ "Steelhead"))
+  
+timeplot <- ggplot(data = fish_ts1, aes(x = date, y = count, color = species)) +
+  geom_line(show.legend = FALSE) +
+  facet_wrap( ~ species, dir = "v") +
+  scale_color_manual(values = palette_grp) +
+  theme_gray() +
+  labs(x = "Year",
+       y = "Fish Observations") +
+  theme(plot.title = element_text(size = 14,
+                                  face = "bold",
+                                  hjust = 0.5),
+        axis.title.y = element_text(size = 14),
+        axis.title.x = element_text(size = 14))
+  
+  timeplot
+
 ```
 
 
+
+#### Analysis:
+- Adult Coho salmon passage through Willamette Falls displays an overall positive trend, from less than 250 in 2007 to over 1,500 in 2010
+- Fish passage through the fish ladder is annually cyclical and annual patterns differs between Steelhead and the Coho salmon
+- Steelhead passage through the fish ladder remains above zero for a longer time period each year than Coho and Jack Coho salmon
+
 ## Seasonplots
-```{r, fig.cap= "**Figure .** Seasonal distribution of salmon observations at the Willamette Fish Ladders from 2001 to 2010."}
+```{r, fig.height= 8, fig.width=9, fig.cap= "**Figure 3.** Seasonal distribution of Coho Salmon, Jack Coho Salmon, and Steelhead observations at the Willamette Fish Ladder from 2001 to 2010."}
 #trying to out a ggseason just to explore
 fish_ts_season <- fish_ts
 
@@ -138,6 +166,9 @@ season <- coho_plot/jack_coho_plot/steel_plot
 season
 ```
 
+
+
+#### Analysis:
 - Coho and Jack Coho peak seasonally in early October, with Jack Coho having the most centralized observations
 - Coho salmon observations have increased since 2001 and have the highest number of observations in a particular month
 - Steelhead salmon have the longest period of observation, ranging from January to August, peaking in June
@@ -147,8 +178,8 @@ season
 ## Summary Statistics & Analysis
 
 
-```{r, fig.height= 8, fig.width=9}
-fish_index <- fish_ts %>% 
+```{r, fig.height= 8, fig.width=9, fig.cap = "**Figure 4.** Total annual passage count of adult Coho Salmon, Jack Coho Salmon, and Stealhead Trout observed at Willamette Falls from the beginning of 2001 through the end of 2010. The scales of the y-axes are different for each species to render the data easier to visualize. Hover over a column to see the number of adult fish of that species observed for that year." }
+fish_index <- fish_ts1 %>% 
   index_by(year = ~ year(.)) %>% 
   group_by(species) %>% 
   summarise(total = sum(count)) 
@@ -172,7 +203,7 @@ plotly::ggplotly(fish_annual) %>%
 ```
 
 
-**Figure X.** This column graph shows the total annual passage count of adult Coho Salmon, Jack Coho Salmon, and Stealhead Trout observed at Willamette Falls from the beginning of 2001 through the end of 2010. The scales of the y-axes are different for each species to render the data easier to visualize. Hover over a column to see the number of adult fish of that species observed for that year. 
+
 
 
 #### Analysis:
@@ -182,5 +213,6 @@ plotly::ggplotly(fish_annual) %>%
 - Steelhead Trout were the most numerous fish observed throughout the study, the number of fish observed showed greater variability in the first five eyars of the study and greater stability, though lower numbers, in the second five years.
 
 - The number of Coho Salmon observed passing through the Willamette Falls fish ladder varied throughout the study with a large increase int he last two years (with a more than five-fold increase between 2008 and 2009).
+
 
 
