@@ -210,9 +210,9 @@ plotly::ggplotly(fish_annual) %>%
 
 - Jack Coho Salmon were the least commonly observed fish overall, and had a dramatic increase in numbers (over a fifteen-fold increase from 2007 to 2008) in the last three years of the study.
 
-- Steelhead Trout were the most numerous fish observed throughout the study, the number of fish observed showed greater variability in the first five eyars of the study and greater stability, though lower numbers, in the second five years.
+- Steelhead Trout were the most numerous fish observed throughout the study, the number of fish observed showed greater variability in the first five years of the study and greater stability, though lower numbers, in the second five years.
 
-- The number of Coho Salmon observed passing through the Willamette Falls fish ladder varied throughout the study with a large increase int he last two years (with a more than five-fold increase between 2008 and 2009).
+- The number of Coho Salmon observed passing through the Willamette Falls fish ladder varied throughout the study with a large increase in the last two years (with a more than five-fold increase between 2008 and 2009).
 
 
 
